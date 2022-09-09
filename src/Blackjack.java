@@ -21,7 +21,8 @@ public class Blackjack extends GraphicsProgram {
 
     // objects we are playing with
     private Deck deck;
-    private GHand dealer;
+    private GHand dealerHand;
+    private GHand playerHand;
 
     @Override
     public void init(){
@@ -33,19 +34,22 @@ public class Blackjack extends GraphicsProgram {
         deck = new Deck();
 
         // set up our buttons
-        wagerButton = new JButton("Wager");
         playButton = new JButton("Play");
         hitButton = new JButton("Hit");
         stayButton = new JButton("Stay");
         quitButton = new JButton("Quit");
 
         // add buttons to the screen
+        add(playButton, SOUTH);
         add(hitButton, SOUTH);
         add(stayButton, SOUTH);
         add(quitButton, SOUTH);
-        add(playButton, SOUTH);
 
         addActionListeners();
+
+        hitButton.setVisible(false);
+        stayButton.setVisible(false);
+
     }
 
     @Override
@@ -53,7 +57,6 @@ public class Blackjack extends GraphicsProgram {
         switch(ae.getActionCommand()){
 
             case "Play":
-                wager();
                 play();
                 break;
 
@@ -77,26 +80,40 @@ public class Blackjack extends GraphicsProgram {
 
     private void wager() {
         wager = (int) Dialog.getDouble("Make a wager:");
-        play();
     }
 
     private void play(){
+        wager();
+        deck.deal();
+
+        hitButton.setVisible(true);
+        playButton.setVisible(false);
+        stayButton.setVisible(true);
+
+        playerHand = new GHand(new Hand(deck, false));
+        add(playerHand, getWidth()/20, getHeight()/2 + playerHand.getHeight()/2);
+        playerHand.hit();
+
+        dealerHand = new GHand(new Hand(deck, true));
+        add(dealerHand, getWidth()/20, getHeight()/2 - dealerHand.getHeight() - getHeight()/30);
 
     }
 
     private void hit(){
+        playerHand.hit();
 
+        // check for a bust
+        if(playerHand.getTotal() > 17){
+            bust();
+        }
     }
 
     private void stay(){
 
     }
 
-    @Override
-    public void run(){
-        GHand hand = new GHand(new Hand(deck, true));
-        add(hand, 100, 100);
-        hand.hit();
+    private void bust(){
+        System.out.println("bust");
     }
 
     public static void main(String[] args) {

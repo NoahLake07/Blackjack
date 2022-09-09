@@ -48,7 +48,5 @@ public class Deck {
         }
 
         return cards[top++];
-
-
     }
 }

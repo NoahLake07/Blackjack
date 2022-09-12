@@ -28,7 +28,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Documents/Programming/Resources/Dependencies/acm.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../Programming/Resources/Dependencies/acm.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -37,11 +37,30 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Documents/Programming/Resources/Dependencies/Dialog.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../../Programming/Resources/Dependencies/Dialog.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../Dependencies/acm.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../Dependencies/Dialog.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="acm" level="project" />
   </component>
 </module>

@@ -227,8 +227,12 @@ public class Blackjack extends GraphicsProgram {
             dealer = new GImage("labelovals/LC" + dealerHand.getTotal() + ".png");
             player = new GImage("labelovals/LC" + playerHand.getTotal() + ".png");
 
+            dealer.scale(0.17);
             player.scale(0.17);
-            add(player, getWidth() - getWidth() / 5, getHeight() - getHeight() / 3);
+            add(dealer, getWidth() - getWidth() / 3, getHeight() - (getHeight() / 3) * 2);
+            add(player, getWidth() - getWidth() / 3, getHeight() - getHeight() / 3);
+
+            dealerHand.flipCard(0);
         }
 
         private void startClickFlash () {

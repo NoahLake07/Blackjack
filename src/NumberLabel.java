@@ -24,10 +24,4 @@ public class NumberLabel extends GCompound {
     public GNumberLabel[] getNumArr() {
         return numArr;
     }
-
-    public void addAll(){
-        for (int i = 0; i < numArr.length; i++) {
-            add(numArr[i], numArr[i].getNumX(), numArr[i].getNumY());
-        }
-    }
 }

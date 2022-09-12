@@ -6,14 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.text.NumberFormat;
-import svu.csc213.Dialog;
 
 import static java.awt.MouseInfo.getPointerInfo;
 
 public class Blackjack extends GraphicsProgram {
-
-    private boolean r = true;
 
     // data about the game
     private int wager = 0;
@@ -44,11 +40,14 @@ public class Blackjack extends GraphicsProgram {
     Color playBackground = new Color(0, 115, 0);
     Color background = new Color(0, 150, 40);
 
-    Runnable thread2 = new Runnable() {
+    // threads for doing concurrent actions
+    Runnable wagerValidityCheck = new Runnable() {
                 public void run() {
                     add(invalidEntry,wagerField.getX(),wagerField.getY() + wagerBox.getHeight()/10);
                     // loop will run until onWagerPage = false
                     while(onWagerPage) {
+
+                        // check for a wager invalid entry
                         try{
                             if (onWagerPage && (!(wagerField.getText().isEmpty()) && !(Integer.valueOf(wagerField.getText()) < 1 && !((Integer.valueOf(wagerField.getText())) > balance)))) {
 
@@ -71,6 +70,22 @@ public class Blackjack extends GraphicsProgram {
                     }
                 }
             };
+    Runnable startResizing = new Runnable() {
+        public void run() {
+            while(true){
+                // set bounds of window height
+
+                // set bounds of the title page components
+                if(onStartPage == false && onWagerPage == false){
+                    title.setBounds(getWidth() / 2 - title.getWidth() / 2,getHeight() / 2 - title.getHeight(),title.getWidth(),title.getHeight());
+                }
+
+                // set bounds of the wager page components
+
+                // set bounds of the game page components
+            }
+        }
+    };
 
     @Override
     public void init() {
@@ -103,10 +118,9 @@ public class Blackjack extends GraphicsProgram {
         addActionListeners();
         addMouseListeners();
         startClickFlash();
-        thread2.run();
+        wagerValidityCheck.run();
     }
 
-    @Override
     public void actionPerformed(ActionEvent ae) {
         switch (ae.getActionCommand()) {
             case "Hit":
@@ -143,6 +157,16 @@ public class Blackjack extends GraphicsProgram {
         }
     }
 
+    public void keyPressed(java.awt.event.KeyEvent evt) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (onWagerPage == true) {
+                wager = Integer.parseInt(wagerField.getText());
+                System.out.println("wager made");
+                wagerMade();
+            }
+        }
+    }
+
     private void setupWagerPage() {
         // change data values
         onWagerPage = true;
@@ -171,17 +195,6 @@ public class Blackjack extends GraphicsProgram {
         addActionListeners();
         addKeyListeners();
         addMouseListeners();
-        startThread2();
-    }
-
-    public void keyPressed(java.awt.event.KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (onWagerPage == true) {
-                wager = Integer.parseInt(wagerField.getText());
-                System.out.println("wager made");
-                wagerMade();
-            }
-        }
     }
 
     private void wagerMade(){
@@ -202,7 +215,7 @@ public class Blackjack extends GraphicsProgram {
         play();
     }
 
-        private void play () {
+    private void play () {
             deck.deal();
 
             playerHand = new GHand(new Hand(deck, false));
@@ -236,9 +249,6 @@ public class Blackjack extends GraphicsProgram {
             myRunnable.run();
         }
 
-        private void startThread2 () {
-
-    }
         private void hit () {
             playerHand.hit();
             player.setImage(getFilename(playerHand));
@@ -269,37 +279,11 @@ public class Blackjack extends GraphicsProgram {
 
         private String getFilename(GHand h){
 
-            if (h.getTotal() <= 30) {
-                return "labelovals/LC" + h.getTotal() + ".png";
-            } else {
-                return "labelovals/LC30.png";
-            }
+        if (h.getTotal() <= 30) {
+            return "labelovals/LC" + h.getTotal() + ".png";
+        } else {
+            return "labelovals/LC30.png";
         }
-
-        private void startResizableWindow () {
-
-        // creating the thread
-        Runnable myRunnable =
-                new Runnable() {
-                    public void run() {
-                        while(true){
-                            // set bounds of window height
-
-                            // set bounds of the title page components
-                            if(onStartPage == false && onWagerPage == false){
-                                title.setBounds(getWidth() / 2 - title.getWidth() / 2,getHeight() / 2 - title.getHeight(),title.getWidth(),title.getHeight());
-                            }
-
-                            // set bounds of the wager page components
-
-                            // set bounds of the game page components
-
-
-                        }
-                    }
-                };
-        // starting the thread
-        myRunnable.run();
     }
 
         private int getWindowSize(){

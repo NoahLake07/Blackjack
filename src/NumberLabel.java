@@ -21,6 +21,16 @@ public class NumberLabel extends GCompound {
         }
     }
 
+    public void setValue(int value){
+        String stringValue = String.valueOf(value);
+        int valueLength = stringValue.length();
+
+        // update individual digits
+        for (int i = 0; i < valueLength; i++) {
+            this.numArr[i].setValue(Integer.parseInt(String.valueOf( stringValue.charAt(i) )));
+        }
+    }
+
     public GNumberLabel[] getNumArr() {
         return numArr;
     }

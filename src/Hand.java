@@ -18,6 +18,33 @@ public class Hand {
 
     }
 
+    public void revealAllCards(){
+        for (int i = 0; i < CARDS.length; i++) {
+            CARDS[0].setFaceUp(true);
+        }
+    }
+
+    public int getRevealedTotal(){
+        int sum = 0;
+        int aces = 0;
+
+        for (int i = 0; i < count; i++) {
+            if(CARDS[i].isFaceUp()) {
+                sum += CARDS[i].getValue();
+                if (CARDS[i].getFACE() == Card.Face.ACE) {
+                    ++aces;
+                }
+            }
+        }
+
+        while(sum > 21 && aces > 0){
+            sum -= 10;
+            --aces;
+        }
+
+        return sum;
+    }
+
     public int getTotal(){
         int sum = 0;
         int aces = 0;

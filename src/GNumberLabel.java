@@ -3,6 +3,8 @@ import acm.graphics.GImage;
 
 public class GNumberLabel extends GCompound {
 
+    GImage label;
+
     int numX,numY;
 
     public GNumberLabel(int number,int numPlacement, int x, int y){
@@ -11,9 +13,15 @@ public class GNumberLabel extends GCompound {
         numX = x;
         numY = y;
 
-        GImage label = new GImage("gnumbers/pkg-gnum-" + myNumber + ".png");
+        label = new GImage("gnumbers/pkg-gnum-" + myNumber + ".png");
         label.scale(.1);
         add(label,x,y);
+    }
+
+    public void setValue(int value){
+        label.setImage("gnumbers/pkg-gnum-" + value + ".png");
+        label.scale(.1);
+        label.setLocation(numX,numY);
     }
 
     public int getNumX(){

@@ -10,7 +10,6 @@ public class GHand extends GCompound {
 
     public GHand(Hand hand){
         this.hand = hand;
-
         gcards = new GCard[7];
 
         for (int i = 0; i < hand.getCount(); i++) {
@@ -24,6 +23,10 @@ public class GHand extends GCompound {
             gcards[i] = gcard;
         }
 
+    }
+
+    public void revealAllCards(){
+        hand.revealAllCards();
     }
 
     // get the total value of the hand
@@ -49,6 +52,10 @@ public class GHand extends GCompound {
         // add the new gcard to the compound
         add(gcard, (hand.getCount()-1) * (gcard.getWidth()*1.25),0);
 
+    }
+
+    public int getRevealedTotal(){
+        return hand.getRevealedTotal();
     }
 
 }

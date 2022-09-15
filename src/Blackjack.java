@@ -41,7 +41,7 @@ public class Blackjack extends GraphicsProgram {
     private GHand playerHand;
 
     // components used to input and display prompts
-    GImage dealer, player, title, wagerBox, buttonBox, inGameTitle;
+    GImage dealer, player, title, wagerBox, inGameTitle;
     JTextField wagerField;
     JLabel invalidEntry = new JLabel("Invalid entry");
     NumberLabel playerBalance,inGameWager,inGamePlayerBalance,inGameBankBalance;
@@ -121,6 +121,9 @@ public class Blackjack extends GraphicsProgram {
 
     @Override
     public void init() {
+        // initialize all game components
+        initComponents();
+
         // setup all game components
         setupComponents();
 
@@ -133,11 +136,17 @@ public class Blackjack extends GraphicsProgram {
         // TODO: start the thread that moves and resizes objects when the window is resized
     }
 
-    private void setupComponents(){
+    private void initComponents(){
+        // change GraphicsProgram Window settings
         this.getMenuBar().setVisible(false);
         this.setBackground(playBackground);
 
+        // create a new deck
         deck = new Deck();
+
+        // instantiate hands for player and dealer
+        playerHand = new GHand(new Hand(deck, false));
+        dealerHand = new GHand(new Hand(deck, true));
 
         // assign pathname to buttons
         playButton = new GImage("buttons/playBtn.png");
@@ -146,12 +155,26 @@ public class Blackjack extends GraphicsProgram {
         newGameBtn = new GImage("buttons/playAgainBtn.png");
         dealBtn = new GImage("buttons/continueBtn.png");
 
-        // button containment (currently disabled)
-        buttonBox = new GImage("buttons/buttonBox.png");
-        buttonBox.scale(.7);
-        add(buttonBox, getWidth()-buttonBox.getWidth() - getWidth()/20,getHeight()/2-buttonBox.getHeight()/2);
-        buttonBox.setVisible(false);
+        // creating titles
+        title = new GImage("pngmessages/title.png");
+        title.scale(.8);
+        add(title, getWidth() / 2 - title.getWidth() / 2, getHeight() / 2 - title.getHeight());
+        inGameTitle = new GImage("pngmessages/title-ingame.png");
+        inGameTitle.scale(.8);
+        add(inGameTitle,0,0);
+        inGameTitle.setVisible(false);
 
+        // creating wager input area
+        wagerBox = new GImage("pngmessages/wagerBox.png");
+        wagerBox.scale(.121);
+
+        // creating wager icon
+        wagerIcon = new GImage("pngmessages/wagerIcon.png");
+        wagerIcon.scale(.16);
+
+    }
+
+    private void setupComponents(){
         // assign temp images to the dealer and player card total icons
         dealer = new GImage("labelovals/LC1.png");
         player = new GImage("labelovals/LC1.png");
@@ -186,24 +209,11 @@ public class Blackjack extends GraphicsProgram {
         hitButton.setVisible(false);
         dealBtn.setVisible(false);
 
-        // creating titles
-        title = new GImage("pngmessages/title.png");
-        title.scale(.8);
-        add(title, getWidth() / 2 - title.getWidth() / 2, getHeight() / 2 - title.getHeight());
-        inGameTitle = new GImage("pngmessages/title-ingame.png");
-        inGameTitle.scale(.8);
-        add(inGameTitle,0,0);
-        inGameTitle.setVisible(false);
-
-        // creating wager input area
-        wagerBox = new GImage("pngmessages/wagerBox.png");
-        wagerBox.scale(.121);
+        // adding wager input area
         add(wagerBox, getWidth() / 2 - wagerBox.getWidth() / 2, getHeight() / 2 - wagerBox.getHeight() / 2);
         wagerBox.setVisible(false);
 
-        // creating wager icon
-        wagerIcon = new GImage("pngmessages/wagerIcon.png");
-        wagerIcon.scale(.16);
+        // adding wager icon
         add(wagerIcon,getWidth() * .05,getHeight() - getHeight()/10);
         wagerIcon.setVisible(false);
 
@@ -391,12 +401,10 @@ public class Blackjack extends GraphicsProgram {
         // deal the cards
         deck.deal();
 
-        // create and add the player hand
-        playerHand = new GHand(new Hand(deck, false));
+        // add the player hand
         add(playerHand, getWidth() - getWidth() * .6, getHeight() / 2 + playerHand.getHeight() / 2);
 
-        // create and add the dealer hand
-        dealerHand = new GHand(new Hand(deck, true));
+        // add the dealer hand
         add(dealerHand, getWidth() - getWidth() * .6, getHeight() / 2 - dealerHand.getHeight());
 
         // update the card total icons
@@ -408,8 +416,6 @@ public class Blackjack extends GraphicsProgram {
         // set button visibility
         hitButton.setVisible(true);
         stayButton.setVisible(true);
-        buttonBox.setVisible(false);
-        buttonBox.sendToBack();
         inGameTitle.setVisible(true);
         wagerIcon.setVisible(true);
         balanceIcon.setVisible(true);
@@ -592,14 +598,41 @@ public class Blackjack extends GraphicsProgram {
     private void nextGame(){
 
         // REMOVE ALL OBJECTS FROM SCREEN
-        removeAll();
+        refreshGameData();
 
         // SETUP NEW COMPONENTS
         setupComponents();
 
         // REDIRECT TO THE WAGER PAGE
         setupWagerPage();
+    }
 
+    private void refreshGameData(){
+        // remove and hide used components
+        title.setVisible(false);
+        playButton.setVisible(false);
+        newGameBtn.setVisible(false);
+        inGameBankBalance.setVisible(false);
+        inGamePlayerBalance.setVisible(false);
+        inGameTitle.setVisible(false);
+        inGameWager.setVisible(false);
+
+        remove(dealerHand);
+        remove(playerHand);
+
+        // clear wager field
+        wagerField.setText("");
+
+        // create a fresh deck
+        deck = new Deck();
+
+        // create new player and dealer hands
+        playerHand = new GHand(new Hand(deck, false));
+        dealerHand = new GHand(new Hand(deck, true));
+
+        // setup data for UI
+        gameFinished = false;
+        onWagerPage = true;
     }
 
     private String getFilename(GHand h){

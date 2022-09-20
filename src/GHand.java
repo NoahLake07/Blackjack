@@ -39,6 +39,10 @@ public class GHand extends GCompound {
         gcards[index].flip();
     }
 
+    public void setCardBackVisible(Boolean status) {
+        gcards[0].cardBack.setVisible(status);
+    }
+
     // draw a card from the deck (this is called a 'hit' in Blackjack)
     public void hit(){
         hand.hit();

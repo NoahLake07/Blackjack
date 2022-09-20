@@ -484,6 +484,8 @@ public class Blackjack extends GraphicsProgram {
         dealer.setImage(getFilename(dealerHand));
         dealer.scale(0.17);
 
+        dealerHand.setCardBackVisible(false);
+
         // calculate the distance each hand is from 21
         int playerDiff = 21 - playerHand.getTotal();
         int dealerDiff = 21 - dealerHand.getTotal();

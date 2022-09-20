@@ -44,12 +44,16 @@ public class Blackjack extends GraphicsProgram {
     GImage dealer, player, title, wagerBox, inGameTitle;
     JTextField wagerField;
     JLabel invalidEntry = new JLabel("Invalid entry");
-    NumberLabel playerBalance,inGameWager,inGamePlayerBalance,inGameBankBalance;
+    JLabel playerBalance,inGameWager,inGamePlayerBalance,inGameBankBalance;
+    Font numberLabels = new Font(Font.SANS_SERIF, Font.BOLD, 25);
 
     // colors for different page backgrounds
     Color playBackground = new Color(0, 115, 19);
     Color defaultBackground = new Color(0, 150, 40);
     Color gameBackground = new Color(77, 136, 100);
+
+    // creating preset bounds
+    Rectangle labelBounds = new Rectangle(5000,numberLabels.getSize());
 
     // threads for doing concurrent actions
     Runnable wagerValidityCheck = new Runnable() {
@@ -229,7 +233,6 @@ public class Blackjack extends GraphicsProgram {
         add(bankIcon,getWidth() * .7556,getHeight()/16);
         bankIcon.setVisible(false);
 
-
         // adding mouse listeners to the hit and stay buttons
         hitButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
@@ -350,8 +353,9 @@ public class Blackjack extends GraphicsProgram {
         wagerField.setText("");
 
         // adding the player balance label
-        playerBalance = new NumberLabel(balance,getWidth()/2,getHeight()/2);
+        playerBalance = new JLabel(""+balance);
         add(playerBalance,getWidth()/2 - playerBalance.getWidth()/2,wagerBox.getY() + (wagerBox.getHeight()/6 * 4.56));
+        playerBalance.setFont(numberLabels);
 
         // add event listeners
         addActionListeners();
@@ -381,19 +385,22 @@ public class Blackjack extends GraphicsProgram {
         playingGame = true;
 
         // add the in-game bank balance
-        inGameBankBalance = new NumberLabel(bank,0,0);
-        inGameBankBalance.scale(.7);
+        inGameBankBalance = new JLabel(""+bank);
+        inGameBankBalance.setBounds(labelBounds);
         add(inGameBankBalance,(int) bankIcon.getX() + bankIcon.getWidth() + getWidth()/45, (int) bankIcon.getY() + inGameBankBalance.getHeight()/10);
+        inGameBankBalance.setForeground(Color.WHITE);
 
         // add the in-game player balance
-        inGamePlayerBalance = new NumberLabel(balance,0,0);
-        inGamePlayerBalance.scale(.7);
+        inGamePlayerBalance = new JLabel(""+balance);
+        inGamePlayerBalance.setBounds(labelBounds);
         add(inGamePlayerBalance,(int) balanceIcon.getX() + balanceIcon.getWidth() + getWidth()/45, (int) balanceIcon.getY() + balanceIcon.getHeight()/10);
+        inGamePlayerBalance.setForeground(Color.WHITE);
 
         // add the in-game wager
-        inGameWager = new NumberLabel(wager, 0,0);
+        inGameWager = new JLabel(""+wager);
+        inGameWager.setBounds(labelBounds);
         add(inGameWager, (int) wagerIcon.getX() + wagerIcon.getWidth() + getWidth()/25, (int) wagerIcon.getY() + wagerIcon.getWidth()/7);
-        inGameWager.scale(.7);
+        inGameWager.setForeground(Color.WHITE);
 
         // set the background to the game background
         this.setBackground(gameBackground);
@@ -430,6 +437,12 @@ public class Blackjack extends GraphicsProgram {
         if (playerHand.getTotal() == 21){
             win();
         }
+
+        // setting fonts to number labels
+        inGamePlayerBalance.setFont(numberLabels);
+        inGameBankBalance.setFont(numberLabels);
+        inGameWager.setFont(numberLabels);
+
     }
 
     private void startClickFlash () {
@@ -551,15 +564,13 @@ public class Blackjack extends GraphicsProgram {
 
     private void gameFinished(){
         // update labels
-        inGamePlayerBalance.setValue(balance);
-        inGameBankBalance.setValue(bank);
+        inGamePlayerBalance.setText(""+balance);
+        inGameBankBalance.setText(""+bank);
         playingGame = false;
         player.setImage("labelovals/LC"+ playerHand.getTotal() +".png");
         dealer.setImage("labelovals/LC"+ dealerHand.getTotal() +".png");
 
         // resize labels after change
-        inGamePlayerBalance.scale(.7);
-        inGameBankBalance.scale(.7);
         player.scale(0.17);
         dealer.scale(0.17);
 
@@ -596,7 +607,6 @@ public class Blackjack extends GraphicsProgram {
     }
 
     private void nextGame(){
-
         // REMOVE ALL OBJECTS FROM SCREEN
         refreshGameData();
 

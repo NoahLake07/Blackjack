@@ -27,6 +27,7 @@ public class Blackjack extends GraphicsProgram {
     private boolean onWagerPage = false;
     private boolean onGame = false;
     private boolean gameFinished = false;
+    private int roundNum = 1;
 
     // buttons for controls
     GImage playButton, dealBtn, stayButton, hitButton,newGameBtn;
@@ -66,9 +67,9 @@ public class Blackjack extends GraphicsProgram {
     Runnable wagerValidityCheck = new Runnable() {
         public void run() {
             add(invalidEntry,wagerField.getX(),wagerField.getY() + wagerBox.getHeight()/10);
-            // loop will run until onWagerPage = false
+            wagerField.setText("");
+            // loop will run forever
             while(true) {
-
                 if(onWagerPage){
                     // check for a wager invalid entry
                     try{
@@ -77,45 +78,33 @@ public class Blackjack extends GraphicsProgram {
                             if(Integer.valueOf(wagerField.getText())<=balance){
                                 dealBtn.setVisible(true);
                                 invalidEntry.setVisible(false);
+                                System.out.println("valid");
                             } else {
                                 dealBtn.setVisible(false);
                                 invalidEntry.setVisible(true);
+                                System.out.println("value too large");
                             }
                         } else {
                             dealBtn.setVisible(false);
                             invalidEntry.setVisible(true);
+                            System.out.println("value not within bounds");
                         }
                     } catch (Exception e){
                         dealBtn.setVisible(false);
                         dealBtn.setVisible(false);
                         invalidEntry.setVisible(true);
-
                     }
                 } else {
                     dealBtn.setVisible(false);
                     dealBtn.setVisible(false);
                     invalidEntry.setVisible(false);
+                    System.out.println("not on wagerpage");
                 }
             }
         }
 
     };
-    Runnable startResizing = new Runnable() {
-        public void run() {
-            while(true){
-                // set bounds of window height
 
-                // set bounds of the title page components
-                if(!onStartPage && !onWagerPage){
-                    title.setBounds(getWidth() / 2 - title.getWidth() / 2,getHeight() / 2 - title.getHeight(),title.getWidth(),title.getHeight());
-                }
-
-                // set bounds of the wager page components
-
-                // set bounds of the game page components
-            }
-        }
-    };
     Runnable startTitleInsFlash = new Runnable() {
                 public void run() {
                     // run while start page is true
@@ -129,18 +118,11 @@ public class Blackjack extends GraphicsProgram {
                     playButton.setVisible(false);
                 }
             };
-    Runnable timedNGButtonReveal = new Runnable() {
-        @Override
-        public void run() {
-            pause(5000);
-            newGameBtn.setVisible(true);
-        }
-    };
 
     @Override
     public void init() {
         // initialize all game components
-        initComponents();
+        initComponents(true);
 
         // setup all game components
         setupComponents();
@@ -154,7 +136,7 @@ public class Blackjack extends GraphicsProgram {
         // TODO: start the thread that moves and resizes objects when the window is resized
     }
 
-    private void initComponents(){
+    private void initComponents(Boolean isFirstRound){
         // change GraphicsProgram Window settings
         this.getMenuBar().setVisible(false);
         this.setBackground(playBackground);
@@ -179,7 +161,7 @@ public class Blackjack extends GraphicsProgram {
         add(title, getWidth() / 2 - title.getWidth() / 2, getHeight() / 2 - title.getHeight());
         inGameTitle = new GImage("pngmessages/title-ingame.png");
         inGameTitle.scale(.8);
-        add(inGameTitle,0,0);
+        add(inGameTitle, 0, 0);
         inGameTitle.setVisible(false);
 
         // creating wager input area
@@ -621,11 +603,14 @@ public class Blackjack extends GraphicsProgram {
         refreshGameData();
 
         // SETUP NEW COMPONENTS
+        roundNum++;
+        initComponents(!(roundNum>1));
         setupComponents();
 
         onWagerPage = true;
         // REDIRECT TO THE WAGER PAGE
         setupWagerPage();
+        title.setVisible(false);
     }
 
     private void refreshGameData(){

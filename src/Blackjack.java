@@ -293,6 +293,7 @@ public class Blackjack extends GraphicsProgram {
                 if ((onWagerPage) && (getPointerInfo().getLocation().getX() > dealBtn.getX()) && (getPointerInfo().getLocation().getY() > dealBtn.getY())){
                     if(dealBtn.isVisible()) {
                         wagerMade();
+                        dealBtn.setVisible(false);
                     }
                 }
             }
@@ -369,6 +370,9 @@ public class Blackjack extends GraphicsProgram {
         dealBtn.setVisible(false);
         playerBalance.setVisible(false);
         invalidEntry.setVisible(false);
+        playButton.setVisible(false);
+        title.setVisible(false);
+        playerBalance.setVisible(false);
 
         // begin the game
         play();

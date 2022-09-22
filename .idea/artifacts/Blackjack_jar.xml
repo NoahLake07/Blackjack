@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Blackjack:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Blackjack_jar</output-path>
+    <root id="archive" name="Blackjack.jar">
+      <element id="module-output" name="Blackjack" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Dependencies/Dialog.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Dependencies/acm.jar" path-in-jar="/" />
+      <element id="library" level="project" name="acm" />
+    </root>
+  </artifact>
+</component>

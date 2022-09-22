@@ -95,7 +95,6 @@ public class Blackjack extends GraphicsProgram {
                     invalidEntry.setVisible(false);
                     title.setVisible(false);
                 }
-                System.out.println("wagerField.getText() = " + wagerField.getText());
             }
         }
 
@@ -144,14 +143,14 @@ public class Blackjack extends GraphicsProgram {
         playerHand = new GHand(new Hand(deck, false));
         dealerHand = new GHand(new Hand(deck, true));
 
-        // assign pathname to buttons
-        playButton = new GImage("buttons/playBtn.png");
-        hitButton = new GImage("buttons/hitBtn2.png");
-        stayButton = new GImage("buttons/stayBtn2.png");
-        newGameBtn = new GImage("buttons/playAgainBtn.png");
-        dealBtn = new GImage("buttons/continueBtn.png");
-
         if (isFirstRound) {
+            // assign pathname to buttons
+            playButton = new GImage("buttons/playBtn.png");
+            hitButton = new GImage("buttons/hitBtn2.png");
+            stayButton = new GImage("buttons/stayBtn2.png");
+            newGameBtn = new GImage("buttons/playAgainBtn.png");
+            dealBtn = new GImage("buttons/continueBtn.png");
+
             // creating titles
             title = new GImage("pngmessages/title.png");
             title.scale(.8);
@@ -163,15 +162,33 @@ public class Blackjack extends GraphicsProgram {
 
             // creating the wager field
             wagerField = new JTextField("",15);
+
+            // creating wager input area
+            wagerBox = new GImage("pngmessages/wagerBox.png");
+            wagerBox.scale(.121);
+
+            // creating wager icon
+            wagerIcon = new GImage("pngmessages/wagerIcon.png");
+            wagerIcon.scale(.16);
+
+            // creating player balance icon
+            balanceIcon = new GImage("pngmessages/balanceIcon.png");
+            balanceIcon.scale(.12);
+
+            // creating bank balance icon
+            bankIcon = new GImage("pngmessages/bankIcon.png");
+            bankIcon.scale(.11);
+
+            // creating player balance label (wager page)
+            playerBalance = new JLabel("" + balance);
+            playerBalance.setBounds(labelBounds);
+            playerBalance.setFont(numberLabels);
         }
-
-        // creating wager input area
-        wagerBox = new GImage("pngmessages/wagerBox.png");
-        wagerBox.scale(.121);
-
-        // creating wager icon
-        wagerIcon = new GImage("pngmessages/wagerIcon.png");
-        wagerIcon.scale(.16);
+        // re-assign images
+        hitButton.setImage("buttons/hitBtn2.png");
+        stayButton.setImage("buttons/stayBtn2.png");
+        newGameBtn.setImage("buttons/playAgainBtn.png");
+        dealBtn.setImage("buttons/continueBtn.png");
 
     }
 
@@ -218,15 +235,11 @@ public class Blackjack extends GraphicsProgram {
         add(wagerIcon,getWidth() * .05,getHeight() - getHeight()/10);
         wagerIcon.setVisible(false);
 
-        // creating player balance icon
-        balanceIcon = new GImage("pngmessages/balanceIcon.png");
-        balanceIcon.scale(.12);
+        // adding player balance icon
         add(balanceIcon,getWidth() * .565,getHeight()/16);
         balanceIcon.setVisible(false);
 
-        // creating bank balance icon
-        bankIcon = new GImage("pngmessages/bankIcon.png");
-        bankIcon.scale(.11);
+        // adding bank balance icon
         add(bankIcon,getWidth() * .7556,getHeight()/16);
         bankIcon.setVisible(false);
 
@@ -334,11 +347,10 @@ public class Blackjack extends GraphicsProgram {
         wagerField.setVisible(true);
 
         // adding the player balance label
-        playerBalance = new JLabel("" + balance);
-        playerBalance.setBounds(labelBounds);
-        playerBalance.setFont(numberLabels);
         add(playerBalance,getWidth()/2 - playerBalance.getWidth()/2,wagerBox.getY() + (wagerBox.getHeight()/6 * 4.56));
         playerBalance.setForeground(Color.WHITE);
+        playerBalance.setText(""+balance);
+        playerBalance.setVisible(true);
 
         // add event listeners
         addActionListeners();
@@ -616,6 +628,25 @@ public class Blackjack extends GraphicsProgram {
         onWagerPage = true;
         setupWagerPage();
         title.setVisible(false);
+        dealBtn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                dealBtn.setImage("buttons/continueBtn2.png");
+                dealBtn.scale(0.185);
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                dealBtn.setImage("buttons/continueBtn.png");
+                dealBtn.scale(0.185);
+            }
+
+            public void mousePressed(MouseEvent e){
+                if ((onWagerPage) && (getPointerInfo().getLocation().getX() > dealBtn.getX()) && (getPointerInfo().getLocation().getY() > dealBtn.getY())){
+                    if(dealBtn.isVisible()) {
+                        wagerMade();
+                    }
+                }
+            }
+        });
     }
 
     private void refreshGameData(){

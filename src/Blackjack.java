@@ -434,6 +434,8 @@ public class Blackjack extends GraphicsProgram {
         // check for a blackjack
         if (playerHand.getTotal() == 21){
             win();
+            gameFinished = true;
+            onGame = false;
         }
 
         // setting fonts to number labels
@@ -553,12 +555,18 @@ public class Blackjack extends GraphicsProgram {
 
     private void push(){
         // TODO add ribbons that say both the dealer and player "pushed"
+        System.out.println("PUSH (TIE)");
+        hitButton.setVisible(false);
+        stayButton.setVisible(false);
         gameFinished = true;
         onGame = false;
         gameFinished();
     }
 
     private void gameFinished(){
+        onGame = false;
+        gameFinished = true;
+
         // update labels
         inGamePlayerBalance.setText(""+balance);
         inGameBankBalance.setText(""+bank);
@@ -592,7 +600,7 @@ public class Blackjack extends GraphicsProgram {
             }
 
             public void mousePressed(MouseEvent e){
-                if (gameFinished == true) {
+                if (gameFinished == true && newGameBtn.isVisible()) {
                     nextGame();
                 }
             }
